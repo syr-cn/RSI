@@ -6,6 +6,14 @@ Before 1.0, minor versions may change the API.
 
 ## [Unreleased]
 
+### Added
+- `rsi.pluginrsi` (`rsi.improve(..., method="pluginrsi")`, aliases `plugin-rsi` / `plugin_rsi`): reimplementation of
+  PluginRSI (Shi et al., arXiv:2609.32423) on `rsi.core`, with Stage 1 single-surface plugin mutation on balanced
+  solved/failed minibatches, a persistent reusable `PluginLibrary` (`seed_library` for cross-run and cross-policy
+  transfer), and Stage 2 full-split workflow + library recomposition. Includes offline `MockPluginProposer` support
+  for `HarnessWorldDomain` and `AgentQADomain`, method docs under `docs/methods/pluginrsi/`, and skill reference
+  `.claude/skills/rsi-improve/methods/pluginrsi.md` with verified claim-ledger entries.
+
 ### Changed
 - `merged_usage` is defined once, in `rsi.core.llm`. `rsi.evomap` and `rsi.harness2` each carried an identical copy;
   both still export the name, so imports keep working.

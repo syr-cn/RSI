@@ -131,6 +131,10 @@ nav:
           - methods/harness2/README.md
           - Paper spec: methods/harness2/paper-spec.md
           - Implementation: methods/harness2/implementation.md
+      - PluginRSI:
+          - methods/pluginrsi/README.md
+          - Paper spec: methods/pluginrsi/paper-spec.md
+          - Implementation: methods/pluginrsi/implementation.md
   - Benchmarks: benchmarks.md
   - Evidence:
       - Paper claims audit: reports/claims-summary.md

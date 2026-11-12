@@ -114,6 +114,7 @@ def cmd_recommend(a) -> int:
         single_metric_script=a.script,
         prompts_only=a.prompts_only,
         no_grader=a.no_grader,
+        modular_plugins=a.modular_plugins,
     ):
         print(f"{m:13s} {why}")
     return 0
@@ -191,6 +192,7 @@ def main(argv=None) -> int:
     r.add_argument("--script", action="store_true", help="one editable script + one metric")
     r.add_argument("--prompts-only", action="store_true")
     r.add_argument("--no-grader", action="store_true", help="open-ended tasks: no grader, labels or score")
+    r.add_argument("--modular-plugins", action="store_true", help="modular plugin surfaces + workflow recomposition")
     r.set_defaults(fn=cmd_recommend)
 
     i = sub.add_parser("improve")

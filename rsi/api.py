@@ -91,6 +91,17 @@ METHODS: dict[str, MethodInfo] = {
         "tasks arrive one at a time with no grader or labels (open-ended work) and ~4k rollouts per task are "
         "affordable",
     ),
+    "pluginrsi": MethodInfo(
+        "pluginrsi",
+        "rsi.pluginrsi",
+        "modular harness plugins (roles, tools, skills, memory, prompts) plus global workflow recomposition",
+        "Stage 1: positive paired gain on a balanced solved/failed minibatch -> shared plugin library; "
+        "Stage 2: strict improvement on the full search split",
+        "single-surface Stage 1 isolation (workflow and sibling plugins frozen), paired minibatch admission, "
+        "full held-in recomposition gate, optional leakage screen",
+        "your harness decomposes into reusable plugin surfaces and you want credit-assigned plugin evolution "
+        "that transfers across runs or solver models",
+    ),
 }
 ALIASES = {
     "dream-rsi": "dream",
@@ -99,6 +110,8 @@ ALIASES = {
     "karpathy": "autoresearch",
     "harness-squared": "harness2",
     "harness²": "harness2",
+    "plugin-rsi": "pluginrsi",
+    "plugin_rsi": "pluginrsi",
 }
 
 
@@ -147,7 +160,7 @@ def improve(
             how to grade the result.
         seed_artifact: the starting prompt, harness or script. Defaults to ``domain.seed_artifact()``.
         method: one of ``rsi.METHODS``: ``rrsi``, ``gepa``, ``autoresearch``, ``metaharness``, ``solpi``, ``dream``,
-            ``evomap``, ``harness2``. ``rsi.recommend()`` suggests one.
+            ``evomap``, ``harness2``, ``pluginrsi``. ``rsi.recommend()`` suggests one.
         llm_task: the model the artifact runs on, as an ``LLM`` or a spec string: ``"claude:haiku"`` (the ``claude``
             CLI), ``"api:sonnet"`` (``ANTHROPIC_API_KEY``) or an offline simulator/mock.
         llm_propose: the model that proposes changes (same forms as ``llm_task``).
@@ -200,6 +213,7 @@ def recommend(
     single_metric_script: bool = False,
     prompts_only: bool = False,
     no_grader: bool = False,
+    modular_plugins: bool = False,
 ) -> list[tuple[str, str]]:
     """Rank methods for a problem description as ``[(method, reason), ...]``.
 
@@ -216,6 +230,7 @@ def recommend(
         single_metric_script: one editable file and one metric (adds autoresearch).
         prompts_only: only prompt text may change (adds GEPA).
         no_grader: there is no grader, label or score at all (Harness² only).
+        modular_plugins: the harness decomposes into isolated plugin surfaces and workflow code (adds PluginRSI).
 
     Returns:
         ``(method, reason)`` pairs, most suitable first; RRSI when nothing else fits.
@@ -233,6 +248,14 @@ def recommend(
         out.append(("autoresearch", "one editable file, one metric, fixed budget: the simplest loop that works"))
     if prompts_only or what_changes == "prompts":
         out.append(("gepa", "reflective prompt evolution: few rollouts, uses textual feedback, Pareto diversity"))
+    if modular_plugins and what_changes in ("harness", "agent", "plugins"):
+        out.append(
+            (
+                "pluginrsi",
+                "modular plugin surfaces: balanced-minibatch Stage 1 isolation into a reusable plugin library, "
+                "then full-split Stage 2 workflow recomposition",
+            )
+        )
     if what_changes in ("harness", "agent") and must_transfer:
         out.append(("rrsi", "regularized harness evolution: only changes that generalize and pay for their cost"))
     if cost_is_bottleneck:
